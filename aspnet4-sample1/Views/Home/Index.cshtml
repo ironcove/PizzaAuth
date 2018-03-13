@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@using System.Security.Claims;
+@section styles
+{
+    <style>
+        .shopping-cart {
+            width: 369px;
+            background-color: #ff6c40;
+        }
+    </style>
+
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="jumbotron">
+                <h1>Pizza 42</h1>
+                <p class="lead">Welcome to our online pizza ordering system.</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <h3>Pepperoni and Sausage</h3>
+                    <p>This pizza is our best selling pizza</p>
+                    <div class="btn btn-success pizza-add">Add to Cart <span class="price">$14.99</span></div>
+                </div>
+                <div class="col-lg-2">
+                    <h3>Pepperoni</h3>
+                    <p>Classic Pizza</p>
+                    <div class="btn btn-success pizza-add">Add to Cart <span class="price">$9.99</span></div>
+                </div>
+                <div class="col-lg-2">
+                    <h3>Tony's Favorite</h3>
+                    <p>Tony knows pizza the best! Try out his pizza with pulled pork, bacon, italian sausage, and green peppers. </p>
+                    <div class="btn btn-success pizza-add">Add to Cart <span class="price">$18.99</span></div>
+                </div>
+                <div class="col-lg-2">
+                    <h3>Cheesy Bread</h3>
+                    <p>Every pizza needs a side order of cheesy bread</p>
+                    <div class="btn btn-success pizza-add">Add to Cart <span class="price">$4.99</span></div>
+                </div>
+                <div class="col-lg-2">
+                    <h3>Pineapple Pizza</h3>
+                    <p>No one should put pineapples on a perfectly good piece of pizza. Seriously don't buy this type.</p>
+                    <div class="btn btn-danger pizza-add">Add to Cart <span class="price">$11.49</span></div>
+                </div>
+                <div class="col-lg-2">
+                    <h3>2 Liter of Soda</h3>
+                    <p>Your choice of coke products</p>
+                    <div class="btn btn-success pizza-add">Add to Cart <span class="price">$1.79</span></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-3">
+            <div class="well-lg shopping-cart">
+                <div class="panel-heading"><h3>Shopping Cart</h3></div>
+                <div class="panel-body">
+                    <table class="table" id="shopping-table">
+                        <thead>
+                            <tr><th>Item</th><th>Price</th><th></th></tr>
+                        </thead>
+                        <tbody id="shopping-table-body">
+
+                        </tbody>
+                    </table>
+                    <h4>Total: $<span id="total">0.00</span></h4>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <button class="btn btn-info order-submit order-submit-logged-in">Submit Order</button>
+                    }
+                    else
+                    {
+                       <a href="@Url.Action("Login", "Account")" class="btn btn-info order-submit">Login to place order</a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".order-submit").hide();
+            $(".pizza-add").click(function () {
+                var itemName = $(this).parent().find("h3").text();
+                var price = $(this).find(".price").text();
+                $("#shopping-table-body").append("<tr><td>" + itemName + "</td><td>" + price + "</td><td><button class=\"btn btn-xs btn-danger remove-from-cart\">Remove</button></td></tr>");
+                updatePrice();
+            });
+            $("#shopping-table").on("click", ".remove-from-cart", function () {
+                $(this).parent().parent().remove();
+                updatePrice();
+            });
+            $(".order-submit-logged-in").click(function () {
+                alert("Order succesfully placed!");
+            });
+        });
+        function updatePrice()
+        {
+            var priceNumber = 0;
+            $('#shopping-table > tbody > tr').each(function () {
+                var price = $(':nth-child(2)', this).text().substr(1);
+                priceNumber = parseFloat(price) + priceNumber;
+            });
+            if (priceNumber != 0)
+            {
+                $(".order-submit").show();
+            }
+            else {
+                $(".order-submit").hide();
+            }
+            $("#total").text(priceNumber.toFixed(2));
+        }
+    </script>
+
+}

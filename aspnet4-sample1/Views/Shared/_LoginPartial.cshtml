@@ -1,0 +1,15 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="#" title="Manage">Hello @ViewBag.name!</a>
+            </li>
+            <li><a href="@Url.Action("Logout", "Account")" title="Manage">Log off</a></li>
+        </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register/Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
