@@ -40,7 +40,10 @@ namespace aspnet4_sample1.Controllers
 
         public ActionResult Logout()
         {
-            FederatedAuthentication.SessionAuthenticationModule.SignOut();
+            //FederatedAuthentication.SessionAuthenticationModule.SignOut();
+
+
+            HttpContext.GetOwinContext().Authentication.SignOut();
 
             // Redirect to Auth0's logout endpoint.
             // After terminating the user's session, Auth0 will redirect to the 

@@ -2,7 +2,12 @@
 {
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a href="#" title="Manage">Hello @ViewBag.name!</a>
+                <a href="#" title="Manage">Hello @ViewBag.name!
+                @if(ViewBag.PictureUrl!=null)
+                {
+                    <img width="30" src="@ViewBag.PictureUrl"/>
+                }
+                </a>
             </li>
             <li><a href="@Url.Action("Logout", "Account")" title="Manage">Log off</a></li>
         </ul>

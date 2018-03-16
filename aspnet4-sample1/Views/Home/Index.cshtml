@@ -18,6 +18,22 @@
             <div class="jumbotron">
                 <h1>Pizza 42</h1>
                 <p class="lead">Welcome to our online pizza ordering system.</p>
+@if (!User.Identity.IsAuthenticated)
+{
+    <p>*Please login to place an order</p>
+}
+else
+{
+    if (ViewBag.Gender == "female")
+    {
+        <p>I see you identify as a female. We think you would enjoy our cheesy bread.</p>
+    }
+    if (ViewBag.Gender == "male")
+                {
+        <p>I see you identify as a male. Check out  "Tony's Favorite Pizza" it's our most popular pizza for men!</p>
+    }
+}
+           
             </div>
             <div class="row">
                 <div class="col-lg-2">
@@ -68,7 +84,17 @@
                     <h4>Total: $<span id="total">0.00</span></h4>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <button class="btn btn-info order-submit order-submit-logged-in">Submit Order</button>
+
+                        if (ViewBag.emailVerified == false)
+                        {
+                            <p>*You must verify your email before submitting an order.</p>
+                            <button class="btn btn-info order-submit order-submit-unverified">Submit Order</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-info order-submit order-submit-logged-in">Submit Order</button>
+                        }
+
                     }
                     else
                     {
@@ -83,8 +109,27 @@
 
 @section scripts
 {
+@if (User.Identity.IsAuthenticated)
+{
+    <script>
+        var _loggedIn = true;
+    </script>
+}
+else
+{
+    <script>
+        var _loggedIn = false;
+    </script>
+}
+
+
     <script>
         $(document).ready(function () {
+            if (!_loggedIn)
+            {
+                $(".pizza-add").hide();
+            }
+
             $(".order-submit").hide();
             $(".pizza-add").click(function () {
                 var itemName = $(this).parent().find("h3").text();
@@ -99,6 +144,9 @@
             $(".order-submit-logged-in").click(function () {
                 alert("Order succesfully placed!");
             });
+            $(".order-submit-unverified").click(function () {
+                alert("You must verify your email before placing your order.");
+            })
         });
         function updatePrice()
         {
